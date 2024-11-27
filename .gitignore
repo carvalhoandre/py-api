@@ -16,7 +16,7 @@ logs
 *.tsbuildinfo
 
 # configs
-.config/*
+config/*
 
 # envs
 .env
