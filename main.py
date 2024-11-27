@@ -1,70 +1,63 @@
 from flask import Flask, jsonify, request
+from models.Book import db, Book
 
 app = Flask(__name__)
 
-livros = [
-    {
-        'id': 1,
-        'título': 'O Senhor dos Anéis - A Sociedade do Anel',
-        'autor': 'J.R.R Tolkien'
-    },
-    {
-        'id': 2,
-        'título': 'Harry Potter e a Pedra Filosofal',
-        'autor': 'J.K Howling'
-    },
-    {
-        'id': 3,
-        'título': 'James Clear',
-        'autor': 'Hábitos Atômicos'
-    },
-]
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+pg8000://postgres:148119980@localhost:5432/booksdb'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+try:
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
+    print("Database connected successfully!")
+except Exception as e:
+    print("Error initializing database:", e)
 
-# Consultar(todos)
-@app.route('/livros', methods=['GET'])
-def obter_livros():
-    return jsonify(livros)
+# Retrieve All Books
+@app.route('/books', methods=['GET'])
+def get_books():
+    books = Book.query.all()  # Fixed typo
+    return jsonify([{'id': book.id, 'title': book.title, 'author': book.author } for book in books])
 
+# Retrieve Book by ID
+@app.route('/books/<int:id>', methods=['GET'])
+def get_book_by_id(id):
+    book = Book.query.get(id)
+    if book:
+        return jsonify({'id': book.id, 'title': book.title, 'author': book.author })
+    return jsonify({'error': 'Book not found'}), 404
 
-# Consultar(id)
-@app.route('/livros/<int:id>', methods=['GET'])
-def obter_livro_por_id(id):
-    for livro in livros:
-        if livro.get('id') == id:
-            return jsonify(livro)
+# Create New Book
+@app.route('/books', methods=['POST'])
+def create_book():
+    new_book = request.get_json()
+    book = Book(title=new_book['title'], author=new_book['author'])
+    db.session.add(book)
+    db.session.commit()
+    return jsonify({'id': book.id, 'title': book.title, 'author': book.author })
 
+# Update Book
+@app.route('/books/<int:id>', methods=['PUT'])
+def update_book_by_id(id):
+    updated_book = request.get_json()
+    book = Book.query.get(id)
+    if book:
+        book.title = updated_book['title']
+        book.author = updated_book['author']
+        db.session.commit()
+        return jsonify({'id': book.id, 'title': book.title, 'author': book.author})
+    return jsonify({'error': 'Book not found'}), 404
 
-# Editar
-@app.route('/livros/<int:id>', methods=['PUT'])
-def editar_livro_por_id(id):
-    livro_alterado = request.get_json()
-    for indice, livro in enumerate(livros):
-        if livro.get('id') == id:
-            livros[indice].update(livro_alterado)
-            return jsonify(livros[indice])
-
-
-# Criar
-@app.route('/livros', methods=['POST'])
-def incluir_novo_livro():
-    novo_livro = request.get_json()
-    livros.append(novo_livro)
-
-    return jsonify(livros)
-
-
-# Excluir
-@app.route('/livros/<int:id>', methods=['DELETE'])
-def excluir_livro(id):
-    for indice, livro in enumerate(livros):
-        if livro.get('id') == id:
-            del livros[indice]
-
-    return jsonify(livros)
-
+# Delete Book
+@app.route('/books/<int:id>', methods=['DELETE'])
+def delete_book(id):
+    book = Book.query.get(id)
+    if book:
+        db.session.delete(book)
+        db.session.commit()
+        return jsonify({'message': 'Book deleted successfully'})
+    return jsonify({'error': 'Book not found'}), 404
 
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(port=5000, host='0.0.0.0', debug=True)
