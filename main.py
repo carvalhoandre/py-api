@@ -1,10 +1,17 @@
+import os
+
 from flask import Flask, jsonify, request
 from models.Book import db, Book
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+pg8000://postgres:148119980@localhost:5432/booksdb'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+env = os.getenv('FLASK_ENV', 'dev')
+if env == 'prod':
+    app.config.from_object('config.prod.ProdConfig')
+elif env == 'test':
+    app.config.from_object('config.test.TestConfig')
+else:
+    app.config.from_object('config.dev.DevConfig')
 
 try:
     db.init_app(app)
