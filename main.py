@@ -67,4 +67,5 @@ def delete_book(id):
     return jsonify({'error': 'Book not found'}), 404
 
 if __name__ == "__main__":
-    app.run(port=5000, host='0.0.0.0', debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
