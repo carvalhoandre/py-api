@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, jsonify, request
-from models.Book import db, Book
+from models.book import db, Book
 
 app = Flask(__name__)
 
