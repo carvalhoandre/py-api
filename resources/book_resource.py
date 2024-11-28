@@ -32,7 +32,7 @@ def create_book():
     return standard_response(True, "Book created successfully", 201, book.to_dict())
 
 # Update Book
-@book_bp.route('/books/<int:id>', methods=['PUT'])
+@book_bp.route('/books/<int:book_id>', methods=['PUT'])
 def update_book_by_id(book_id):
     data = request.get_json()
 

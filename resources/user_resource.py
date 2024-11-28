@@ -27,7 +27,7 @@ def create_user():
     return standard_response(True, "User created successfully", 201, new_user.to_dict())
 
 
-@user_bp.route('/user/<int:id>', methods=['PUT'])
+@user_bp.route('/user/<int:user_id>', methods=['PUT'])
 def update_user_by_id(user_id):
     data = request.get_json()
 
@@ -41,7 +41,7 @@ def update_user_by_id(user_id):
 
     return standard_response(True, "User updated successfully", 200, updated_user.to_dict())
 
-@user_bp.route('/user/password/<int:id>', methods=['PUT'])
+@user_bp.route('/user/password/<int:user_id>', methods=['PUT'])
 def update_user_password(user_id):
     data = request.get_json()
 
@@ -55,7 +55,7 @@ def update_user_password(user_id):
 
     return standard_response(True, "Password updated successfully", 200)
 
-@user_bp.route('/user/<int:id>', methods=['DELETE'])
+@user_bp.route('/user/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     deleted_user = user_service.delete_user(user_id)
 
