@@ -1,8 +1,9 @@
 import os
-
 from flask import Flask
-from domain.book_domain import db
+from domain.book_domain import db, Book  # Ensure Book is imported
+from domain.user_domain import User  # Ensure User is imported
 from resources.book_resource import book_bp
+from resources.user_resource import user_bp
 
 app = Flask(__name__)
 
@@ -18,11 +19,12 @@ try:
     db.init_app(app)
     with app.app_context():
         db.create_all()
-    print("Database connected successfully!")
+        print("Database and tables created successfully!")
 except Exception as e:
-    print("Error initializing database:", e)
+    print(f"Error initializing database: {e}")
 
 app.register_blueprint(book_bp)
+app.register_blueprint(user_bp)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

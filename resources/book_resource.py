@@ -31,13 +31,13 @@ def create_book():
 
 # Update Book
 @book_bp.route('/books/<int:id>', methods=['PUT'])
-def update_book_by_id(id):
+def update_book_by_id(book_id):
     data = request.get_json()
 
     if not data or not data.get('title') or not data.get('author'):
         return jsonify({"error": "Invalid data"}), 400
 
-    updated_book = book_service.update_book(id, data['title'], data['author'])
+    updated_book = book_service.update_book(book_id, data['title'], data['author'])
 
     if not updated_book:
         return jsonify({"error": "Book not found"}), 304
