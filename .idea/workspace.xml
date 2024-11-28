@@ -5,8 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d80ada90-b291-497f-85d6-263852fe30c6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/repositories/user_repository.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/user_resource.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/schemas/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/schemas/user_schema.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service/user_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/domain/user_domain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/book_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/book_resource.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/book_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/service/book_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,9 +47,22 @@
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Users/andre/Documentos/GitHub/py-api/schemas&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Users\andre\Documentos\GitHub\py-api\schemas" />
+      <recent name="D:\Users\andre\Documentos\GitHub\py-api\filters" />
+      <recent name="D:\Users\andre\Documentos\GitHub\py-api\repositories" />
+      <recent name="D:\Users\andre\Documentos\GitHub\py-api\service" />
+      <recent name="D:\Users\andre\Documentos\GitHub\py-api\resource" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Users\andre\Documentos\GitHub\py-api" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="py-api" />
