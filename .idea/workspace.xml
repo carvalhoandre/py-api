@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d80ada90-b291-497f-85d6-263852fe30c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/auth_resource.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/settings.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/auth_token.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/dev.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/prod.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/test.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/user_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/user_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/book_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/book_resource.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/user_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/service/user_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/auth_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/auth_resource.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

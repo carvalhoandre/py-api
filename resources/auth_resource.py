@@ -1,9 +1,10 @@
 from flask import Blueprint, request
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from service.user_service import UserService
 
 from utils.response_http_util import standard_response
+from utils.auth_token import generate_token
 
 auth_bp = Blueprint('auth', __name__)
 user_service = UserService()
@@ -18,8 +19,8 @@ def login():
     if not user or not user_service.verify_password(user.id, password):
         return standard_response(False, "Invalid credentials", 401)
 
-    access_token = create_access_token(identity=user.id)
-    refresh_token = create_refresh_token(identity=user.id)
+    access_token = generate_token(user.id)
+    refresh_token = generate_token(user.id, 2)
 
     return standard_response(True, "Login successful", 200, {
         "access_token": access_token,
@@ -31,7 +32,7 @@ def login():
 @jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
-    new_access_token = create_access_token(identity=current_user)
+    new_access_token = generate_token(current_user)
     return standard_response(True, "Login successful", 200, {
         "access_token": new_access_token
     })
