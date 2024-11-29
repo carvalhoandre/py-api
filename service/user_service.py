@@ -9,6 +9,9 @@ class UserService:
     def get_user_by_id(self, user_id):
         return self.repository.find_by_id(user_id)
 
+    def get_user_by_email(self, email):
+        return self.repository.find_by_email(email)
+
     def create_user(self, name, email, cpf, password):
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         return self.repository.save(name, email, cpf, hashed_password.decode('utf-8'))

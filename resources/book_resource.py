@@ -1,4 +1,6 @@
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
+
 from service.book_service import BookService
 from utils.response_http_util import standard_response
 
@@ -22,17 +24,19 @@ def get_book_by_id(book_id):
 
 # Create New Book
 @book_bp.route('/books', methods=['POST'])
+@jwt_required()
 def create_book():
     data = request.get_json()
 
     if not data or not data.get('title') or not data.get('author'):
         return standard_response(False, "Invalid data", 400)
 
-    book = book_service.create_book(data['title'], data['author'])
-    return standard_response(True, "Book created successfully", 201, book.to_dict())
+    new_book  = book_service.create_book(data['title'], data['author'])
+    return standard_response(True, "Book created successfully", 201, new_book.to_dict())
 
 # Update Book
 @book_bp.route('/books/<int:book_id>', methods=['PUT'])
+@jwt_required()
 def update_book_by_id(book_id):
     data = request.get_json()
 
@@ -48,6 +52,7 @@ def update_book_by_id(book_id):
 
 # Delete Book
 @book_bp.route('/books/<int:book_id>', methods=['DELETE'])
+@jwt_required()
 def delete_book(book_id):
     deleted_book = book_service.delete_book(book_id)
 

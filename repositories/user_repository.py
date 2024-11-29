@@ -41,3 +41,6 @@ class UserRepository:
         self.db_session.delete(user)
         self.db_session.commit()
         return user
+
+    def find_by_email(self, email):
+        return self.db_session.query(User).filter_by(email=email).first()
