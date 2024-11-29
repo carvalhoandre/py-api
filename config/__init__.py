@@ -11,6 +11,9 @@ def create_app(env='dev'):
     """Factory function to create the Flask app instance."""
     from config.settings import DevConfig, TestConfig, ProdConfig
 
+    from domain.book_domain import Book
+    from domain.user_domain import User
+
     app = Flask(__name__)
 
     if env == 'prod':

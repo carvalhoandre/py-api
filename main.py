@@ -1,5 +1,8 @@
 import os
 from config import create_app
+from dotenv import load_dotenv
+
+load_dotenv()
 
 env = os.getenv('FLASK_ENV', 'dev')
 

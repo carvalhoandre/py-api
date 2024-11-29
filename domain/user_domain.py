@@ -7,11 +7,14 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     cpf = db.Column(db.String(14), unique=True, nullable=False)
+    active = db.Column(db.Boolean, default=False)
+    confirmation_code = db.Column(db.String(36), unique=True)
 
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "cpf": self.cpf
+            "cpf": self.cpf,
+            "confirmation_code": self.active
         }

@@ -10,8 +10,15 @@ class UserRepository:
     def find_by_id(self, user_id):
         return self.db_session.query(User).filter_by(id=user_id).first()
 
-    def save(self, name, email, cpf, password):
-        new_user = User(name=name, email = email, cpf = cpf, password = password)
+    def save(self, name, email, cpf, password, confirmation_code):
+        new_user = User(
+            name=name,
+            email=email,
+            cpf=cpf,
+            password=password,
+            confirmation_code=confirmation_code,
+            active=False
+        )
         self.db_session.add(new_user)
         self.db_session.commit()
         return new_user
@@ -31,6 +38,17 @@ class UserRepository:
         user.name = name
         user.email = email
         user.cpf = cpf
+        self.db_session.commit()
+        return user
+
+    def active_user(self, user_id, confirmation_code):
+        user = self.find_by_id(user_id)
+
+        if not user or user.confirmation_code != confirmation_code:
+            return None
+
+        user.active = True
+        user.confirmation_code = None
         self.db_session.commit()
         return user
 
