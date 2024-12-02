@@ -15,13 +15,19 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
+    if not email or not password:
+        return standard_response(False, "Email and password are required", 400)
+
     user = user_service.get_user_by_email(email)
 
-    if not user or not user_service.verify_password(user.id, password):
+    if not user:
         return standard_response(False, "Invalid credentials", 401)
 
-    if not user.confirmation_code:
-        return standard_response(False, "Unverified user", 401)
+    if not user.active:
+        return standard_response(False, "Unauthorized: Email not verified", 403)
+
+    if not user_service.verify_password(user.id, password):
+        return standard_response(False, "Invalid credentials", 401)
 
     access_token = generate_token(user.id)
     refresh_token = generate_token(user.id, 2)

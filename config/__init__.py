@@ -13,6 +13,8 @@ def create_app(env='dev'):
 
     from domain.book_domain import Book
     from domain.user_domain import User
+    from domain.appointment_domain import Appointment
+    from domain.schedule_domain import Schedule
 
     app = Flask(__name__)
 
@@ -37,8 +39,13 @@ def create_app(env='dev'):
     from resources.book_resource import book_bp
     from resources.user_resource import user_bp
     from resources.auth_resource import auth_bp
+    from resources.appointment_resource import appointment_bp
+    from resources.schedule_resource import schedule_bp
+
     app.register_blueprint(book_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(appointment_bp)
+    app.register_blueprint(schedule_bp)
 
     return app

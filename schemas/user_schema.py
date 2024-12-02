@@ -5,3 +5,5 @@ class UserSchema(Schema):
     email = fields.Email(required=True)
     password = fields.String(required=True, validate=validate.Length(min=8))
     cpf = fields.String(required=True, validate=validate.Regexp(r'^\d{11}$'))
+    role = fields.String(required=True, validate=validate.OneOf(["admin", "patient"]))
+

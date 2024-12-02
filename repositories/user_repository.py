@@ -8,7 +8,7 @@ class UserRepository:
         return self.db_session.query(User).all()
 
     def find_by_id(self, user_id):
-        return self.db_session.query(User).filter_by(id=user_id).first()
+        return self.db_session.query(User).filter_by(id=int(user_id)).first()
 
     def save(self, name, email, cpf, password, confirmation_code, role):
         new_user = User(

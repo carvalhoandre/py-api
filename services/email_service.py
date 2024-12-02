@@ -16,8 +16,6 @@ def send_confirmation_email(to_email, subject, confirmation_code, name, user_id)
         'confirmation_email_template.html'
     )
 
-    print(sender_email, sender_password)
-
     with open(template_path, "r") as file:
         html_content = file.read()
 

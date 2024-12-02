@@ -11,7 +11,7 @@ class User(db.Model):
     cpf = db.Column(db.String(14), unique=True, nullable=False)
     active = db.Column(db.Boolean, default=False)
     confirmation_code = db.Column(db.String(36), unique=True)
-    role = db.Column(Enum('admin', 'patient', name='user_roles'), nullabre=False, default='patient')
+    role = db.Column(Enum('admin', 'patient', name='user_roles'), nullable=False, default='patient')
 
     def to_dict(self):
         return {
