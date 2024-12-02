@@ -1,7 +1,7 @@
 import bcrypt
 from repositories.user_repository import UserRepository
 from config import db
-from service.email_service import send_confirmation_email
+from services.email_service import send_confirmation_email
 
 from utils.auth_token import generate_confirmation_code
 
@@ -15,11 +15,11 @@ class UserService:
     def get_user_by_email(self, email):
         return self.repository.find_by_email(email)
 
-    def create_user(self, name, email, cpf, password):
+    def create_user(self, name, email, cpf, password, role):
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         confirmation_code = generate_confirmation_code()
 
-        user = self.repository.save(name, email, cpf, hashed_password, confirmation_code)
+        user = self.repository.save(name, email, cpf, hashed_password, confirmation_code, role)
 
         if not user:
             return None

@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 
-from service.book_service import BookService
+from services.book_service import BookService
 from utils.response_http_util import standard_response
 
 book_bp = Blueprint('books', __name__)

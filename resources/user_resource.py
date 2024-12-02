@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from service.user_service import UserService
+from services.user_service import UserService
 from schemas.user_schema import UserSchema
 from utils.response_http_util import standard_response
 
@@ -23,7 +23,7 @@ def create_user():
     if errors:
         return standard_response(False, "Invalid data", 400)
 
-    new_user = user_service.create_user( data['name'], data['email'], data['cpf'], data['password'])
+    new_user = user_service.create_user( data['name'], data['email'], data['cpf'], data['password'], data['role'])
     return standard_response(True, "User created successfully", 201, new_user.to_dict())
 
 

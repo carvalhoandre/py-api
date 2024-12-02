@@ -1,5 +1,7 @@
 from config import db
 
+from sqlalchemy import Enum
+
 class User(db.Model):
     __tablename__ = 'users'  
     id = db.Column(db.Integer, primary_key=True)
@@ -9,6 +11,7 @@ class User(db.Model):
     cpf = db.Column(db.String(14), unique=True, nullable=False)
     active = db.Column(db.Boolean, default=False)
     confirmation_code = db.Column(db.String(36), unique=True)
+    role = db.Column(Enum('admin', 'patient', name='user_roles'), nullabre=False, default='patient')
 
     def to_dict(self):
         return {
@@ -16,5 +19,6 @@ class User(db.Model):
             "name": self.name,
             "email": self.email,
             "cpf": self.cpf,
-            "confirmation_code": self.active
+            "confirmation_code": self.active,
+            "role": self.role
         }

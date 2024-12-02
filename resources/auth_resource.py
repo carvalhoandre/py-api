@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from service.user_service import UserService
+from services.user_service import UserService
 
 from utils.response_http_util import standard_response
 from utils.auth_token import generate_token

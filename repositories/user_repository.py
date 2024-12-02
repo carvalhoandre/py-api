@@ -10,13 +10,14 @@ class UserRepository:
     def find_by_id(self, user_id):
         return self.db_session.query(User).filter_by(id=user_id).first()
 
-    def save(self, name, email, cpf, password, confirmation_code):
+    def save(self, name, email, cpf, password, confirmation_code, role):
         new_user = User(
             name=name,
             email=email,
             cpf=cpf,
             password=password,
             confirmation_code=confirmation_code,
+            role=role,
             active=False
         )
         self.db_session.add(new_user)
