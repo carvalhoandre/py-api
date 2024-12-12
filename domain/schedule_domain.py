@@ -1,5 +1,4 @@
 from config import db
-from config import db
 
 class Schedule(db.Model):
     __tablename__ = 'schedules'

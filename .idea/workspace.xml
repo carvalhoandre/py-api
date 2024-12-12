@@ -5,21 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d80ada90-b291-497f-85d6-263852fe30c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/domain/appointment_domain.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repositories/appointment_repository.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/appointment_resource.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/appointment_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/book_domain.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/domain/schedule_domain.py" beforeDir="false" afterPath="$PROJECT_DIR$/domain/schedule_domain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/user_domain.py" beforeDir="false" afterPath="$PROJECT_DIR$/domain/user_domain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/schedule_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/schedule_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/user_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/user_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/auth_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/auth_resource.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/schedule_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/schedule_resource.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schemas/user_schema.py" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/user_schema.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/email_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/email_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/schedule_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/schedule_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repositories/book_repository.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/book_resource.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/book_service.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

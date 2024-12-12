@@ -11,7 +11,6 @@ def create_app(env='dev'):
     """Factory function to create the Flask app instance."""
     from config.settings import DevConfig, TestConfig, ProdConfig
 
-    from domain.book_domain import Book
     from domain.user_domain import User
     from domain.appointment_domain import Appointment
     from domain.schedule_domain import Schedule
@@ -36,13 +35,11 @@ def create_app(env='dev'):
 
     jwt.init_app(app)
 
-    from resources.book_resource import book_bp
     from resources.user_resource import user_bp
     from resources.auth_resource import auth_bp
     from resources.appointment_resource import appointment_bp
     from resources.schedule_resource import schedule_bp
 
-    app.register_blueprint(book_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(appointment_bp)
