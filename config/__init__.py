@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask import Flask
 
+from utils import error_handler
+
 db = SQLAlchemy()
 jwt = JWTManager()
 
@@ -44,5 +46,6 @@ def create_app(env='dev'):
     app.register_blueprint(auth_bp)
     app.register_blueprint(appointment_bp)
     app.register_blueprint(schedule_bp)
+    app.register_error_handler(Exception, error_handler.handle_exception)
 
     return app

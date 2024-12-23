@@ -18,35 +18,40 @@ def login():
     if not email or not password:
         return standard_response(False, "Email and password are required", 400)
 
-    user = user_service.get_user_by_email(email)
+    try:
+        user = user_service.get_user_by_email(email)
 
-    if not user:
-        return standard_response(False, "Invalid credentials", 401)
+        if not user:
+            return standard_response(False, "Invalid credentials", 401)
 
-    if not user.active:
-        return standard_response(False, "Unauthorized: Email not verified", 403)
+        if not user.active:
+            return standard_response(False, "Unauthorized: Email not verified", 403)
 
-    if not user_service.verify_password(user.id, password):
-        return standard_response(False, "Invalid credentials", 401)
+        if not user_service.verify_password(user.id, password):
+            return standard_response(False, "Invalid credentials", 401)
 
-    access_token = generate_token(user.id)
-    refresh_token = generate_token(user.id, 2)
+        access_token = generate_token(user.id)
+        refresh_token = generate_token(user.id, 2)
 
-    return standard_response(True, "Login successful", 200, {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "user": user.to_dict()
-    })
+        return standard_response(True, "Login successful", 200, {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "user": user.to_dict()
+        })
+    except Exception as e:
+        return standard_response(False, str(e), 500)
 
 @auth_bp.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():
-    current_user = get_jwt_identity()
-    new_access_token = generate_token(current_user)
-    return standard_response(True, "Login successful", 200, {
-        "access_token": new_access_token
-    })
-
+    try:
+        current_user = get_jwt_identity()
+        new_access_token = generate_token(current_user)
+        return standard_response(True, "Login successful", 200, {
+            "access_token": new_access_token
+        })
+    except Exception as e:
+        return standard_response(False, str(e), 500)
 
 @auth_bp.route('/confirm-email', methods=['POST'])
 def confirm_email():
@@ -57,16 +62,19 @@ def confirm_email():
     if not confirmation_code or not user_id:
         return standard_response(False, "Invalid body request", 400)
 
-    user = user_service.confirm_account(user_id, confirmation_code)
+    try:
+        user = user_service.confirm_account(user_id, confirmation_code)
 
-    if not user:
-        return standard_response(False, "Unverified user", 401)
+        if not user:
+            return standard_response(False, "Unverified user", 401)
 
-    access_token = generate_token(user.id)
-    refresh_token = generate_token(user.id, 2)
+        access_token = generate_token(user.id)
+        refresh_token = generate_token(user.id, 2)
 
-    return standard_response(True, "Validated successful", 200, {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "user": user.to_dict()
-    })
+        return standard_response(True, "Validated successful", 200, {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "user": user.to_dict()
+        })
+    except Exception as e:
+        return standard_response(False, str(e), 500)
