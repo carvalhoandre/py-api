@@ -80,3 +80,13 @@ def delete_user(user_id):
         return standard_response(True, "User deleted successfully", 200)
     except Exception as e:
         return standard_response(False, str(e), 500)
+
+
+@user_bp.route('user/forgot-password/<int:user_id>', methods=['POST'])
+def send_password_reset_email(user_id):
+    user_service.send_password_reset_email(user_id)
+
+    try:
+        return standard_response(True, "Email sent successfully", 200)
+    except Exception as e:
+        return standard_response(False, str(e), 500)
