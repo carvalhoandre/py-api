@@ -52,7 +52,7 @@ def update_user_by_id(user_id):
     except Exception as e:
         return standard_response(False, str(e), 500)
 
-@user_bp.route('/user/password/<int:user_id>', methods=['PUT'])
+@user_bp.route('/user/reset-password/<int:user_id>', methods=['PUT'])
 def update_user_password(user_id):
     data = request.get_json()
 
