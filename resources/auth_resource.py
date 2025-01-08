@@ -24,12 +24,6 @@ def login():
         if not user:
             return standard_response(False, "Invalid credentials", 401)
 
-        if not user.active:
-            return standard_response(False, "Unauthorized: Email not verified", 403)
-
-        if not user_service.verify_password(user.id, password):
-            return standard_response(False, "Invalid credentials", 401)
-
         access_token = generate_token(user.id)
         refresh_token = generate_token(user.id, 2)
 
