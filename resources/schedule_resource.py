@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from resources.user_resource import user_service
 from services.schedule_service import ScheduleService
 from utils.response_http_util import standard_response
+from utils.auth_token import active_required
 from config import db
 
 schedule_bp = Blueprint('schedules', __name__)
@@ -11,6 +12,7 @@ schedule_service = ScheduleService(db.session)
 
 @schedule_bp.route('/schedule', methods=['POST'])
 @jwt_required()
+@active_required
 def post_schedule():
     data = request.get_json()
     schedules = data.get('schedules')
@@ -33,6 +35,7 @@ def post_schedule():
 
 @schedule_bp.route('/schedule', methods=['GET'])
 @jwt_required()
+@active_required
 def get_schedules():
     user_id = get_jwt_identity()
     schedules = schedule_service.list_schedules(admin_id=user_id)
@@ -45,6 +48,7 @@ def get_schedules():
 
 @schedule_bp.route('/schedule/<int:schedule_id>/available-times', methods=['GET'])
 @jwt_required()
+@active_required
 def get_available_times(schedule_id):
     day_of_week = request.args.get('day_of_week')
 
