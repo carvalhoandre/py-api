@@ -19,6 +19,6 @@ class User(db.Model):
             "name": self.name,
             "email": self.email,
             "cpf": self.cpf,
-            "confirmation_code": self.active,
+            "active": self.active,
             "role": self.role
         }
