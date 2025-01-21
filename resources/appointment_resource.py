@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.appointment_service import AppointmentService
-from utils.auth_token import active_required
 from utils.response_http_util import standard_response
 from config import db
 
@@ -10,7 +9,6 @@ appointment_service = AppointmentService(db.session)
 
 @appointment_bp.route('/appointment', methods=['POST'])
 @jwt_required()
-@active_required
 def post_appointment():
     data = request.get_json()
 
@@ -39,7 +37,6 @@ def post_appointment():
 
 @appointment_bp.route('/appointment/<int:appointment_id>/confirm', methods=['PATCH'])
 @jwt_required()
-@active_required
 def confirm_appointment(appointment_id):
     data = request.get_json()
     status = data.get('status')

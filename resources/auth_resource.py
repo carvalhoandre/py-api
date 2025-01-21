@@ -21,11 +21,17 @@ def login():
     try:
         user = user_service.get_user_by_email(email)
 
-        if not user or not user.password == password:
+        if not user:
             return standard_response(False, "Invalid credentials", 401)
 
-        access_token = generate_token(user)
-        refresh_token = generate_token(user, 2)
+        if not user.active:
+            return standard_response(False, "Unauthorized: Email not verified", 403)
+
+        if not user_service.verify_password(user.id, password):
+            return standard_response(False, "Invalid credentials", 401)
+
+        access_token = generate_token(user.id)
+        refresh_token = generate_token(user.id, 2)
 
         return standard_response(True, "Login successful", 200, {
             "access_token": access_token,
@@ -62,8 +68,8 @@ def confirm_email():
         if not user:
             return standard_response(False, "Unverified user", 401)
 
-        access_token = generate_token(user)
-        refresh_token = generate_token(user, 2)
+        access_token = generate_token(user.id)
+        refresh_token = generate_token(user.id, 2)
 
         return standard_response(True, "Validated successful", 200, {
             "access_token": access_token,
