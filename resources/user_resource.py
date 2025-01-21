@@ -52,7 +52,7 @@ def update_user_by_id(user_id):
     except Exception as e:
         return standard_response(False, str(e), 500)
 
-@user_bp.route('/user/password/<int:user_id>', methods=['PUT'])
+@user_bp.route('/user/reset-password/<int:user_id>', methods=['PUT'])
 def update_user_password(user_id):
     data = request.get_json()
 
@@ -92,5 +92,15 @@ def send_confirmation_code():
         user_service.send_confirmation_code(data['user_id'])
 
         return standard_response(True, "Code sent successfully", 200)
+    except Exception as e:
+        return standard_response(False, str(e), 500)
+
+
+@user_bp.route('user/forgot-password/<int:user_id>', methods=['POST'])
+def send_password_reset_email(user_id):
+    user_service.send_password_reset_email(user_id)
+
+    try:
+        return standard_response(True, "Email sent successfully", 200)
     except Exception as e:
         return standard_response(False, str(e), 500)
