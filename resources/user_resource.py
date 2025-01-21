@@ -81,6 +81,20 @@ def delete_user(user_id):
     except Exception as e:
         return standard_response(False, str(e), 500)
 
+@user_bp.route('/user/send-code', methods=['POST'])
+def send_confirmation_code():
+    data = request.get_json()
+
+    if not data or not data.get('user_id'):
+        return standard_response(False, "Invalid data", 400)
+
+    try:
+        user_service.send_confirmation_code(data['user_id'])
+
+        return standard_response(True, "Code sent successfully", 200)
+    except Exception as e:
+        return standard_response(False, str(e), 500)
+
 
 @user_bp.route('user/forgot-password/<int:user_id>', methods=['POST'])
 def send_password_reset_email(user_id):

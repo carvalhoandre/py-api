@@ -79,6 +79,25 @@ class UserService:
             return self.repository.active_user(user_id, confirmation_code)
         except Exception as e:
             raise ValueError(f"Error confirm account user: {str(e)}")
+    def send_confirmation_code(self, user_id):
+      try:
+          confirmation_code = generate_confirmation_code()
+
+          user = self.repository.find_by_id(user_id)
+
+          if not user:
+              raise ValueError("Failed to find user.")
+
+          send_confirmation_email(
+              to_email=user.email,
+              subject="Activate Your Account",
+              confirmation_code=confirmation_code,
+              name=user.name,
+              user_id=user.id
+          )
+          return user
+      except Exception as e:
+          raise ValueError(f"Error send code: {str(e)}")
 
     def send_password_reset_email(self, user_id):
         try:
