@@ -1,5 +1,7 @@
 # config/__init__.py
 
+from os import getenv
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask import Flask
@@ -20,7 +22,11 @@ def create_app(env='dev'):
 
     app = Flask(__name__)
 
-    CORS(app, origins=["http://localhost:3000"])
+    cors_url = getenv('BASE_URL', 'http://localhost:3000')
+    CORS(app, resources={r"/*": {"origins": cors_url}},
+         methods=["GET", "POST", "OPTIONS"],
+         allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
+         supports_credentials=True)
 
     if env == 'prod':
         app.config.from_object(ProdConfig)
