@@ -3,6 +3,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask import Flask
+from flask_cors import CORS
 
 from utils import error_handler
 
@@ -18,6 +19,8 @@ def create_app(env='dev'):
     from domain.schedule_domain import Schedule
 
     app = Flask(__name__)
+
+    CORS(app, origins=["http://localhost:3000"])
 
     if env == 'prod':
         app.config.from_object(ProdConfig)
