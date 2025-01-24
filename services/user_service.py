@@ -1,7 +1,7 @@
 import bcrypt
 from repositories.user_repository import UserRepository
 from config import db
-from services.email_service import send_confirmation_email
+from services.email_service import send_confirmation_email, send_password_email
 
 from utils.auth_token import generate_confirmation_code
 
@@ -79,3 +79,23 @@ class UserService:
             return self.repository.active_user(user_id, confirmation_code)
         except Exception as e:
             raise ValueError(f"Error confirm account user: {str(e)}")
+
+    def send_password_reset_email(self, user_email):
+        try:
+            reset_code = generate_confirmation_code()
+
+            user = self.repository.find_by_email(user_email)
+
+            if not user:
+                raise ValueError("Failed to find user.")
+
+            send_password_email(
+                to_email=user.email,
+                subject="Redefina a sua senha",
+                name=user.name,
+                user_id=user.id,
+                reset_code=reset_code
+            )
+
+        except Exception as e:
+            raise ValueError(f"Error send email: {str(e)}")

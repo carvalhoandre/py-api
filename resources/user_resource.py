@@ -52,7 +52,7 @@ def update_user_by_id(user_id):
     except Exception as e:
         return standard_response(False, str(e), 500)
 
-@user_bp.route('/user/password/<int:user_id>', methods=['PUT'])
+@user_bp.route('/user/reset-password/<int:user_id>', methods=['PUT'])
 def update_user_password(user_id):
     data = request.get_json()
 
@@ -78,5 +78,20 @@ def delete_user(user_id):
 
     try:
         return standard_response(True, "User deleted successfully", 200)
+    except Exception as e:
+        return standard_response(False, str(e), 500)
+
+@user_bp.route('/user/forgot-password', methods=['POST'])
+def send_password_reset_email():
+    try:
+        data = request.get_json()
+        user_email = data.get('email')
+
+        if not data or not user_email:
+            return standard_response(False, "Invalid email", 400)
+
+        user_service.send_password_reset_email(user_email)
+
+        return standard_response(True, "Email sent successfully", 200)
     except Exception as e:
         return standard_response(False, str(e), 500)
