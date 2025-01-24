@@ -2,6 +2,8 @@
 
 from os import getenv
 
+from sqlalchemy import inspect
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask import Flask
@@ -38,9 +40,18 @@ def create_app(env='dev'):
     try:
         db.init_app(app)
         with app.app_context():
-            db.create_all()
-            if env == 'dev':
-                print("Database and tables created successfully!")
+            inspector = inspect(db.engine)
+            existing_tables = inspector.get_table_names()
+
+            if not existing_tables:
+                db.create_all()
+
+                if env != 'prod':
+                    print("Database and tables created successfully!")
+            else:
+                if env != 'prod':
+                    print("Tables already exist. Skipping creation.")
+
     except Exception as e:
         print(f"Error initializing database: {e}")
 
