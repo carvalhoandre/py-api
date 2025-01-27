@@ -98,3 +98,14 @@ class UserRepository:
         except SQLAlchemyError as e:
             self.db_session.rollback()
             raise ValueError(f"Database error: {str(e)}")
+
+    def update_confirmation_code(self, user, confirmation_code):
+        try:
+            user.confirmation_code = confirmation_code
+            user.active=False
+
+            self.db_session.commit()
+            return user
+        except SQLAlchemyError as e:
+            self.db_session.rollback()
+            raise ValueError(f"Database error: {str(e)}")

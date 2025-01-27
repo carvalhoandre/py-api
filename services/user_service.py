@@ -21,27 +21,6 @@ class UserService:
         except Exception as e:
             raise ValueError(f"Error find user by email: {str(e)}")
 
-    def create_user(self, name, email, cpf, password, role):
-        try:
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-            confirmation_code = generate_confirmation_code()
-
-            user = self.repository.save(name, email, cpf, hashed_password, confirmation_code, role)
-
-            if not user:
-                raise ValueError("Failed to create user.")
-
-            send_confirmation_email(
-                to_email=email,
-                subject="Activate Your Account",
-                confirmation_code=confirmation_code,
-                name=name,
-                user_id=user.id
-            )
-            return user
-        except Exception as e:
-            raise ValueError(f"Error creating user: {str(e)}")
-
     def update_user(self, user_id, name, email, cpf):
         try:
             return self.repository.update(user_id, name, email, cpf)
@@ -99,3 +78,52 @@ class UserService:
 
         except Exception as e:
             raise ValueError(f"Error send email: {str(e)}")
+
+    @staticmethod
+    def send_confirmation_email(user):
+        try:
+            send_confirmation_email(
+                to_email=user.email,
+                subject="Activate Your Account",
+                confirmation_code=user.confirmation_code,
+                name=user.name,
+                user_id=user.id
+            )
+        except Exception as e:
+            raise ValueError(f"Error sending confirmation email: {str(e)}")
+
+    def create_user(self, name, email, cpf, password, role):
+        try:
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            confirmation_code = generate_confirmation_code()
+
+            user = self.repository.save(name, email, cpf, hashed_password, confirmation_code, role)
+
+            if not user:
+                raise ValueError("Failed to create user.")
+
+            self.send_confirmation_email(user)
+
+            return user
+        except Exception as e:
+            raise ValueError(f"Error creating user: {str(e)}")
+
+    def resending_confirmation_email(self, user_id):
+        try:
+            confirmation_code = generate_confirmation_code()
+            user = self.repository.find_by_id(user_id)
+
+            if not user:
+                raise ValueError("User not found.")
+
+            if user.active:
+                raise ValueError("user is already verified")
+
+            self.repository.update_confirmation_code(user, confirmation_code)
+
+            self.send_confirmation_email(user)
+
+            return user
+
+        except Exception as e:
+            raise ValueError(f"Error resending confirmation email: {str(e)}")

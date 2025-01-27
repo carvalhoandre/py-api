@@ -78,3 +78,21 @@ def confirm_email():
         })
     except Exception as e:
         return standard_response(False, str(e), 500)
+
+@auth_bp.route('/resend-confirmation-email', methods=['POST'])
+def resend_confirm_email():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return standard_response(False, "Invalid body request", 400)
+
+    try:
+        user = user_service.resending_confirmation_email(user_id)
+
+        if not user:
+            return standard_response(False, "Error resending code", 500)
+
+        return standard_response(True, "Code resent successfully", 200)
+    except Exception as e:
+        return standard_response(False, str(e), 500)
