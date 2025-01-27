@@ -49,7 +49,7 @@ def send_email(to_email, subject, html_content):
 
 def send_confirmation_email(to_email, subject, confirmation_code, name, user_id):
     base_url = os.getenv('BASE_URL', 'http://localhost')
-    confirmation_link = f"{base_url}/activate?code={confirmation_code}&id={user_id}"
+    confirmation_link = f"{base_url}/auth/confirmarConta?code={confirmation_code}&id={user_id}"
     replacements = {
         "name": name,
         "confirmation_code": confirmation_code,
@@ -61,7 +61,7 @@ def send_confirmation_email(to_email, subject, confirmation_code, name, user_id)
 
 def send_password_email(to_email, subject, reset_code, name, user_id):
     base_url = os.getenv('BASE_URL', 'http://localhost')
-    reset_link = f"{base_url}/auth/confirmarConta?code={reset_code}&id={user_id}"
+    reset_link = f"{base_url}/auth/resetarSenha?code={reset_code}&id={user_id}"
     replacements = {
         "name": name,
         "reset_link": reset_link,
