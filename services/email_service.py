@@ -57,8 +57,8 @@ def send_confirmation_email(to_email, subject, confirmation_code, name):
 
 
 def send_password_email(to_email, subject, reset_code, name, user_id):
-    base_url = os.getenv('BASE_URL', 'http://localhost')
-    reset_link = f"{base_url}/auth/resetarSenha?id={user_id}&key={reset_code}"
+    base_url = os.getenv('BASE_URL', 'http://localhost:3000/')
+    reset_link = f"{base_url}auth/resetarSenha?id={user_id}&key={reset_code}"
     replacements = {
         "name": name,
         "reset_link": reset_link,

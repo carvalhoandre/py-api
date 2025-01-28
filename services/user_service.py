@@ -29,9 +29,11 @@ class UserService:
         except Exception as e:
             raise ValueError(f"Error update user: {str(e)}")
 
-    def update_user_password(self, user_id, password):
+    def update_user_password(self, user_id, password, code):
         try:
-            return self.repository.update_password(user_id, password)
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+            return self.repository.update_password(user_id, hashed_password, code)
         except Exception as e:
             raise ValueError(f"Error update password user: {str(e)}")
 
@@ -77,7 +79,7 @@ class UserService:
         try:
             reset_code = generate_confirmation_code()
 
-            user = self.repository.find_by_email(user_email)
+            user = self.repository.update_user_code(user_email, reset_code)
 
             if not user:
                 raise ValueError("Failed to find user.")

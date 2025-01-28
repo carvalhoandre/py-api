@@ -55,12 +55,14 @@ def update_user_by_id(user_id):
 @user_bp.route('/user/reset-password/<int:user_id>', methods=['PUT'])
 def update_user_password(user_id):
     data = request.get_json()
+    new_password = data["password"]
+    token = data["token"]
 
-    if not data or data.get('password'):
+    if not token or not new_password:
         return standard_response(False, "Invalid data", 400)
 
     try:
-        updated_user_password = user_service.update_user_password(user_id, data["password"])
+        updated_user_password = user_service.update_user_password(user_id, password = new_password, code=token)
 
         if not updated_user_password:
             return standard_response(False, "User not found", 400)

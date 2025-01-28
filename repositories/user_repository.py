@@ -19,13 +19,13 @@ class UserRepository:
             self.db_session.rollback()
             raise ValueError(f"Database error: {str(e)}")
 
-    def save(self, name, email, cpf, password, confirmation_code, role):
+    def save(self, name, email, cpf, hashed_password, confirmation_code, role):
         try:
             new_user = User(
                 name=name,
                 email=email,
                 cpf=cpf,
-                password=password,
+                password=hashed_password,
                 confirmation_code=confirmation_code,
                 role=role,
                 active=False
@@ -37,13 +37,17 @@ class UserRepository:
             self.db_session.rollback()
             raise ValueError(f"Database error: {str(e)}")
 
-    def update_password(self, user_id, password):
+    def update_password(self, user_id, hashed_password, code):
         try:
             user = self.find_by_id(user_id)
             if not user:
                 return None
 
-            user.password = password
+            if code != user.confirmation_code:
+                return None
+
+            user.password = hashed_password
+            user.confirmation_code = None
             self.db_session.commit()
             return user
         except SQLAlchemyError as e:
@@ -104,6 +108,19 @@ class UserRepository:
             user.confirmation_code = confirmation_code
             user.active=False
 
+            self.db_session.commit()
+            return user
+        except SQLAlchemyError as e:
+            self.db_session.rollback()
+            raise ValueError(f"Database error: {str(e)}")
+
+    def update_user_code(self, user_email, code):
+        try:
+            user = self.find_by_email(user_email)
+            if not user:
+                return None
+
+            user.confirmation_code = code
             self.db_session.commit()
             return user
         except SQLAlchemyError as e:
