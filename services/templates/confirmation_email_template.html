@@ -18,26 +18,13 @@
         padding: 20px;
         border-radius: 8px;
       }
-      .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        color: #fff;
-        background-color: #007bff;
-        text-decoration: none;
-        border-radius: 4px;
-      }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>Bem-vindo(a), {{name}}!</h1>
-      <p>
-        Obrigado por registrar-se. Por favor, confirme sua conta usando o código
-        abaixo:
-      </p>
+      <p>Por favor, confirme sua conta usando o código abaixo:</p>
       <h2>{{confirmation_code}}</h2>
-      <p>Ou clique no link abaixo:</p>
-      <a href="{{confirmation_link}}" class="btn">Confirme sua conta</a>
     </div>
   </body>
 </html>

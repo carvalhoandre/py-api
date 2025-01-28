@@ -1,9 +1,11 @@
 import bcrypt
+from flask_jwt_extended import get_jwt_identity
+
 from repositories.user_repository import UserRepository
 from config import db
 from services.email_service import send_confirmation_email, send_password_email
 
-from utils.auth_token import generate_confirmation_code
+from utils.auth_token import generate_confirmation_code, generate_token
 
 class UserService:
     def __init__(self):
@@ -39,23 +41,35 @@ class UserService:
         except Exception as e:
             raise ValueError(f"Error delete user: {str(e)}")
 
-    def verify_password(self, user_id, password):
+    @staticmethod
+    def verify_password(user_password, password):
         try:
-            user = self.get_user_by_id(user_id)
-            if not user:
-                return False
-            return bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8'))
+            return bcrypt.checkpw(password.encode('utf-8'), user_password.encode('utf-8'))
         except Exception as e:
-            raise ValueError(f"Error verify  password user: {str(e)}")
+            raise ValueError(f"Error verify password user: {str(e)}")
 
     def confirm_account(self, user_id, confirmation_code):
         try:
             user_id = int(user_id)
+
         except Exception as e:
             raise ValueError(f"Error not find user: {str(e)}")
 
         try:
-            return self.repository.active_user(user_id, confirmation_code)
+            user = self.repository.active_user(user_id, confirmation_code)
+
+            if not user:
+                raise ValueError("Unverified user")
+
+            access_token = generate_token(user.id)
+            refresh_token = generate_token(user.id, 2)
+
+            return {
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "user": user.to_dict()
+            }
+
         except Exception as e:
             raise ValueError(f"Error confirm account user: {str(e)}")
 
@@ -84,10 +98,9 @@ class UserService:
         try:
             send_confirmation_email(
                 to_email=user.email,
-                subject="Activate Your Account",
+                subject="Confirme sua conta",
                 confirmation_code=user.confirmation_code,
-                name=user.name,
-                user_id=user.id
+                name=user.name
             )
         except Exception as e:
             raise ValueError(f"Error sending confirmation email: {str(e)}")
@@ -101,8 +114,6 @@ class UserService:
 
             if not user:
                 raise ValueError("Failed to create user.")
-
-            self.send_confirmation_email(user)
 
             return user
         except Exception as e:
@@ -127,3 +138,40 @@ class UserService:
 
         except Exception as e:
             raise ValueError(f"Error resending confirmation email: {str(e)}")
+
+    def authentication(self, user_id, password):
+        try:
+            user = self.get_user_by_id(user_id)
+
+            if not user:
+                raise ValueError("Invalid credentials")
+
+            if not self.verify_password(user.password, password):
+                raise ValueError("Invalid credentials")
+
+            if not user.active:
+                self.send_confirmation_email(user)
+                raise ValueError("Account not activated. A new confirmation email has been sent.")
+
+            access_token = generate_token(user.id)
+            refresh_token = generate_token(user.id, 2)
+
+            return {
+                "access_token": access_token,
+                "refresh_token": refresh_token
+            }
+        except Exception as e:
+            raise ValueError(f"Error during login: {str(e)}")
+
+    @staticmethod
+    def refresh_token():
+        try:
+            current_user = get_jwt_identity()
+            new_access_token = generate_token(current_user)
+
+            if not new_access_token:
+                raise ValueError("Invalid credentials")
+            return new_access_token
+
+        except Exception as e:
+            raise ValueError(f"Error refresh token: {str(e)}")

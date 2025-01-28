@@ -47,13 +47,10 @@ def send_email(to_email, subject, html_content):
         print(f"Failed to send email: {e}")
 
 
-def send_confirmation_email(to_email, subject, confirmation_code, name, user_id):
-    base_url = os.getenv('BASE_URL', 'http://localhost')
-    confirmation_link = f"{base_url}/auth/confirmarConta?code={confirmation_code}&id={user_id}"
+def send_confirmation_email(to_email, subject, confirmation_code, name):
     replacements = {
         "name": name,
-        "confirmation_code": confirmation_code,
-        "confirmation_link": confirmation_link,
+        "confirmation_code": confirmation_code
     }
     html_content = load_email_template('confirmation_email_template.html', replacements)
     send_email(to_email, subject, html_content)
@@ -61,7 +58,7 @@ def send_confirmation_email(to_email, subject, confirmation_code, name, user_id)
 
 def send_password_email(to_email, subject, reset_code, name, user_id):
     base_url = os.getenv('BASE_URL', 'http://localhost')
-    reset_link = f"{base_url}/auth/resetarSenha?code={reset_code}&id={user_id}"
+    reset_link = f"{base_url}/auth/resetarSenha?id={user_id}&key={reset_code}"
     replacements = {
         "name": name,
         "reset_link": reset_link,

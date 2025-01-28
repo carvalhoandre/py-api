@@ -1,10 +1,9 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from services.user_service import UserService
 
 from utils.response_http_util import standard_response
-from utils.auth_token import generate_token
 
 auth_bp = Blueprint('auth', __name__)
 user_service = UserService()
@@ -24,18 +23,11 @@ def login():
         if not user:
             return standard_response(False, "Invalid credentials", 401)
 
-        if not user.active:
-            return standard_response(False, "Unauthorized: Email not verified", 403)
-
-        if not user_service.verify_password(user.id, password):
-            return standard_response(False, "Invalid credentials", 401)
-
-        access_token = generate_token(user.id)
-        refresh_token = generate_token(user.id, 2)
+        tokens = user_service.authentication(user.id, password)
 
         return standard_response(True, "Login successful", 200, {
-            "access_token": access_token,
-            "refresh_token": refresh_token,
+            "access_token": tokens["access_token"],
+            "refresh_token": tokens["refresh_token"],
             "user": user.to_dict()
         })
     except Exception as e:
@@ -45,9 +37,8 @@ def login():
 @jwt_required(refresh=True)
 def refresh():
     try:
-        current_user = get_jwt_identity()
-        new_access_token = generate_token(current_user)
-        return standard_response(True, "Login successful", 200, {
+        new_access_token = user_service.refresh_token()
+        return standard_response(True, "Refresh successful", 200, {
             "access_token": new_access_token
         })
     except Exception as e:
@@ -63,18 +54,12 @@ def confirm_email():
         return standard_response(False, "Invalid body request", 400)
 
     try:
-        user = user_service.confirm_account(user_id, confirmation_code)
-
-        if not user:
-            return standard_response(False, "Unverified user", 401)
-
-        access_token = generate_token(user.id)
-        refresh_token = generate_token(user.id, 2)
+        response = user_service.confirm_account(user_id, confirmation_code)
 
         return standard_response(True, "Validated successful", 200, {
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "user": user.to_dict()
+            "access_token": response["access_token"],
+            "refresh_token": response["refresh_token"],
+            "user": response["user"]
         })
     except Exception as e:
         return standard_response(False, str(e), 500)
