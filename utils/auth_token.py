@@ -4,8 +4,10 @@ import random
 import string
 
 def generate_token(user_id, hours=1):
-    token = create_access_token(identity=str(user_id), expires_delta=timedelta(hours))
-    return token
+    try:
+        return create_access_token(identity=str(user_id), expires_delta=timedelta(hours=hours))
+    except Exception as e:
+        raise ValueError(f"Error generating token: {str(e)}")
 
 def generate_confirmation_code(length=4):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))

@@ -37,12 +37,13 @@ def login():
 @jwt_required(refresh=True)
 def refresh():
     try:
-        new_access_token = user_service.refresh_token()
-        return standard_response(True, "Refresh successful", 200, {
-            "access_token": new_access_token
-        })
+        tokens = user_service.refresh_token()
+        return standard_response(True, "Token refreshed successfully", 200, tokens)
+
+    except ValueError as ve:
+        return standard_response(False, str(ve), 401)
     except Exception as e:
-        return standard_response(False, str(e), 500)
+        return standard_response(False, f"Internal server error: {str(e)}", 500)
 
 @auth_bp.route('/confirm-email', methods=['POST'])
 def confirm_email():

@@ -167,11 +167,13 @@ class UserService:
     def refresh_token():
         try:
             current_user = get_jwt_identity()
+            if not current_user:
+                raise ValueError("Invalid token or user not found")
+
             new_access_token = generate_token(current_user)
 
-            if not new_access_token:
-                raise ValueError("Invalid credentials")
-            return new_access_token
-
+            return {"access_token": new_access_token}
+        except ValueError as ve:
+            raise ve
         except Exception as e:
-            raise ValueError(f"Error refresh token: {str(e)}")
+            raise ValueError(f"Error refreshing token: {str(e)}")
