@@ -153,7 +153,6 @@ class UserService:
 
             if not user.active:
                 self.send_confirmation_email(user)
-                raise ValueError("Account not activated. A new confirmation email has been sent.")
 
             access_token = generate_token(user.id)
             refresh_token = generate_token(user.id, 2)
