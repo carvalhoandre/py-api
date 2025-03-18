@@ -7,12 +7,12 @@ class BaseConfig:
 
 class DevConfig(BaseConfig):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI_DEV')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_MONGO_URI_DEV')
 
 class TestConfig(BaseConfig):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI_TEST')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_MONGO_URI_DEV')
 
 class ProdConfig(BaseConfig):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI_PROD')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_MONGO_URI_PROD')

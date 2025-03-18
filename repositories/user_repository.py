@@ -1,128 +1,87 @@
-from sqlalchemy.exc import SQLAlchemyError
+from bson import ObjectId
+from flask import current_app
 from domain.user_domain import User
 
 class UserRepository:
-    def __init__(self, db_session):
-        self.db_session = db_session
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def get_db():
+        return current_app.config["mongo_db"]
 
     def find_all(self):
-        try:
-            return self.db_session.query(User).all()
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+        users = self.get_db()["users"].find()
+        return [User.from_dict(user) for user in users]
 
     def find_by_id(self, user_id):
-        try:
-            return self.db_session.query(User).filter_by(id=int(user_id)).first()
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+        user = self.get_db()["users"].find_one({"_id": ObjectId(user_id)})
+        return User.from_dict(user) if user else None
 
-    def save(self, name, email, cpf, hashed_password, confirmation_code, role):
-        try:
-            new_user = User(
-                name=name,
-                email=email,
-                cpf=cpf,
-                password=hashed_password,
-                confirmation_code=confirmation_code,
-                role=role,
-                active=False
-            )
-            self.db_session.add(new_user)
-            self.db_session.commit()
-            return new_user
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+    def save(self, user_data):
+        result = self.get_db()["users"].insert_one(user_data)
+
+        if not result.inserted_id:
+            raise ValueError("User could not be created.")
+
+        return str(result.inserted_id)
 
     def update_password(self, user_id, hashed_password, code):
-        try:
-            user = self.find_by_id(user_id)
-            if not user:
-                return None
+        user = self.find_by_id(user_id)
+        if not user or user.confirmation_code != code:
+            return None
 
-            if code != user.confirmation_code:
-                return None
-
-            user.password = hashed_password
-            user.confirmation_code = None
-            self.db_session.commit()
-            return user
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+        self.get_db()["users"].update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"password": hashed_password, "confirmation_code": None}}
+        )
+        return self.find_by_id(user_id)
 
     def update(self, user_id, name, email, cpf):
-        try:
-            user = self.find_by_id(user_id)
-            if not user:
-                return None
-
-            user.name = name
-            user.email = email
-            user.cpf = cpf
-            self.db_session.commit()
-            return user
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+        self.get_db()["users"].update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"first_name": name.split()[0], "last_name": " ".join(name.split()[1:]), "email": email, "cpf": cpf}}
+        )
+        return self.find_by_id(user_id)
 
     def active_user(self, user_id, confirmation_code):
-        try:
-            user = self.find_by_id(user_id)
+        user = self.find_by_id(user_id)
+        if not user or user.confirmation_code != confirmation_code:
+            return None
 
-            if not user or user.confirmation_code != confirmation_code:
-                return None
-
-            user.active = True
-            user.confirmation_code = None
-            self.db_session.commit()
-            return user
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+        self.get_db()["users"].update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"active": True, "confirmation_code": None}}
+        )
+        return self.find_by_id(user_id)
 
     def delete(self, user_id):
-        try :
-            user = self.find_by_id(user_id)
-            if not user:
-                return None
-            self.db_session.delete(user)
-            self.db_session.commit()
-            return user
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+        user = self.find_by_id(user_id)
+        if not user:
+            return None
+
+        self.get_db()["users"].delete_one({"_id": ObjectId(user_id)})
+        return User.from_dict(user)
 
     def find_by_email(self, email):
-        try:
-            return self.db_session.query(User).filter_by(email=email).first()
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+        user_data = self.get_db()["users"].find_one({"email": email})
 
-    def update_confirmation_code(self, user, confirmation_code):
-        try:
-            user.confirmation_code = confirmation_code
-            user.active=False
+        return User.from_dict(user_data) if user_data else None
 
-            self.db_session.commit()
-            return user
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+    def update_confirmation_code(self, user_id, confirmation_code):
+        self.get_db()["users"].update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": {"confirmation_code": confirmation_code, "active": False}}
+        )
+        return self.find_by_id(user_id)
 
     def update_user_code(self, user_email, code):
-        try:
-            user = self.find_by_email(user_email)
-            if not user:
-                return None
+        user = self.find_by_email(user_email)
+        if not user:
+            return None
 
-            user.confirmation_code = code
-            self.db_session.commit()
-            return user
-        except SQLAlchemyError as e:
-            self.db_session.rollback()
-            raise ValueError(f"Database error: {str(e)}")
+        self.get_db()["users"].update_one(
+            {"_id": ObjectId(user._id)},
+            {"$set": {"confirmation_code": code}}
+        )
+        return self.find_by_id(user._id)

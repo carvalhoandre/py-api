@@ -1,11 +1,10 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.appointment_service import AppointmentService
 from utils.response_http_util import standard_response
-from config import db
 
 appointment_bp = Blueprint('appointment', __name__)
-appointment_service = AppointmentService(db.session)
+appointment_service = AppointmentService()
 
 @appointment_bp.route('/appointment', methods=['POST'])
 @jwt_required()
