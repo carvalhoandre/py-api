@@ -1,71 +1,88 @@
-# config/__init__.py
-
-from os import getenv
-
-from sqlalchemy import inspect
-
-from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
-from flask import Flask
+import os
+from flask import Flask, request, g
 from flask_cors import CORS
-
+from flask_jwt_extended import JWTManager
+from config.mongo_db import get_mongo_db
 from utils import error_handler
 
-db = SQLAlchemy()
 jwt = JWTManager()
 
-def create_app(env='dev'):
+def create_app(env=None):
     """Factory function to create the Flask app instance."""
     from config.settings import DevConfig, TestConfig, ProdConfig
 
-    from domain.user_domain import User
-    from domain.appointment_domain import Appointment
-    from domain.schedule_domain import Schedule
+    env = env or os.getenv('FLASK_ENV', 'dev')
+
+    config_classes = {
+        'dev': DevConfig,
+        'test': TestConfig,
+        'prod': ProdConfig
+    }
 
     app = Flask(__name__)
+    app.config.from_object(config_classes.get(env, DevConfig))
 
-    cors_url = getenv('BASE_URL', 'http://localhost:3000')
-    CORS(app, resources={r"/*": {"origins": cors_url}},
-         methods=["GET", "POST", "OPTIONS"],
-         allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
-         supports_credentials=True)
+    with app.app_context():
+        app.config["mongo_db"] = get_mongo_db()
 
-    if env == 'prod':
-        app.config.from_object(ProdConfig)
-    elif env == 'test':
-        app.config.from_object(TestConfig)
-    else:
-        app.config.from_object(DevConfig)
+    configure_cors(app)
+    configure_jwt(app)
+    configure_database(app)
+    register_blueprints(app)
 
-    try:
-        db.init_app(app)
-        with app.app_context():
-            inspector = inspect(db.engine)
-            existing_tables = inspector.get_table_names()
+    app.register_error_handler(Exception, error_handler.handle_exception)
 
-            if not existing_tables:
-                db.create_all()
+    return app
 
-                if env != 'prod':
-                    print("Database and tables created successfully!")
-            else:
-                if env != 'prod':
-                    print("Tables already exist. Skipping creation.")
 
-    except Exception as e:
-        print(f"Error initializing database: {e}")
+def configure_cors(app):
+    """Configures CORS settings."""
+    cors_origins = os.getenv('BASE_URL', 'http://localhost:3000')
+    CORS(app, resources={r"/*": {"origins": cors_origins}}, supports_credentials=True)
 
+    @app.after_request
+    def apply_cors_headers(response):
+        """Ensures CORS headers are applied correctly."""
+        origin = request.headers.get("Origin", cors_origins)
+        response.headers.update({
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
+            "Access-Control-Allow-Credentials": "true",
+        })
+        return response
+
+
+def configure_jwt(app):
+    """Initializes JWT settings."""
     jwt.init_app(app)
 
+
+def configure_database(app):
+    """Initializes the MongoDB connection and sets it globally."""
+
+    @app.before_request
+    def setup_services():
+        try:
+            g.mongo_db = get_mongo_db()
+        except Exception as e:
+            app.logger.error(f"Service initialization failed: {str(e)}")
+            raise
+
+    @app.teardown_appcontext
+    def teardown_services(exception=None):
+        """Ensures database connection is properly closed after each request."""
+        g.pop("mongo_db", None)
+
+
+def register_blueprints(app):
+    """Registers Flask blueprints."""
     from resources.user_resource import user_bp
     from resources.auth_resource import auth_bp
     from resources.appointment_resource import appointment_bp
     from resources.schedule_resource import schedule_bp
 
-    app.register_blueprint(user_bp)
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(appointment_bp)
-    app.register_blueprint(schedule_bp)
-    app.register_error_handler(Exception, error_handler.handle_exception)
+    blueprints = [user_bp, auth_bp, appointment_bp, schedule_bp]
 
-    return app
+    for bp in blueprints:
+        app.register_blueprint(bp)

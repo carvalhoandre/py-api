@@ -19,11 +19,10 @@ def login():
 
     try:
         user = user_service.get_user_by_email(email)
-
         if not user:
             return standard_response(False, "Invalid credentials", 401)
 
-        tokens = user_service.authentication(user.id, password)
+        tokens = user_service.authentication(user, password)
 
         return standard_response(True, "Login successful", 200, {
             "access_token": tokens["access_token"],

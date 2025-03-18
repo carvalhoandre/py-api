@@ -4,10 +4,9 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from resources.user_resource import user_service
 from services.schedule_service import ScheduleService
 from utils.response_http_util import standard_response
-from config import db
 
 schedule_bp = Blueprint('schedules', __name__)
-schedule_service = ScheduleService(db.session)
+schedule_service = ScheduleService()
 
 @schedule_bp.route('/schedule', methods=['POST'])
 @jwt_required()

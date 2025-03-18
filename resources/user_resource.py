@@ -28,8 +28,9 @@ def create_user():
 
     try:
         new_user = user_service.create_user(
-            data['name'], data['email'], data['cpf'], data['password'], data['role']
+            data['first_name'], data['last_name'], data['email'], data['cpf'], data['password'], data['role']
         )
+
         return standard_response(True, "User created successfully", 201, new_user.to_dict())
     except Exception as e:
         return standard_response(False, str(e), 500)
