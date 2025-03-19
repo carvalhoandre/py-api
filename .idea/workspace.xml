@@ -4,30 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d80ada90-b291-497f-85d6-263852fe30c6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/config/mongo_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/py-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/py-api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/appointment_domain.py" beforeDir="false" afterPath="$PROJECT_DIR$/domain/appointment_domain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/schedule_domain.py" beforeDir="false" afterPath="$PROJECT_DIR$/domain/schedule_domain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/user_domain.py" beforeDir="false" afterPath="$PROJECT_DIR$/domain/user_domain.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/appointment_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/appointment_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/schedule_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/schedule_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repositories/user_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/repositories/user_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/appointment_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/appointment_resource.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/auth_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/auth_resource.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/schedule_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/schedule_resource.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/user_resource.py" beforeDir="false" afterPath="$PROJECT_DIR$/resources/user_resource.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schemas/schedule_schema.py" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/schedule_schema.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schemas/user_schema.py" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/user_schema.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/appointment_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/appointment_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/schedule_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/schedule_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/user_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/user_service.py" afterDir="false" />
-    </list>
+    <list default="true" id="d80ada90-b291-497f-85d6-263852fe30c6" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,7 +37,7 @@
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "feat-mongodb",
     "last_opened_file_path": "D:/Users/andre/Documentos/GitHub/py-api/templates",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -124,6 +101,7 @@
       <option name="presentableId" value="Default" />
       <updated>1732644475222</updated>
       <workItem from="1742322424841" duration="9091000" />
+      <workItem from="1742393712021" duration="24000" />
     </task>
     <servers />
   </component>

@@ -152,6 +152,9 @@ class UserService:
 
             if not self.verify_password(hashed_password=user.password, plain_password=password):
                 raise ValueError("Invalid credentials")
+            
+            if not user.active:
+                self.send_confirmation_email(user)
 
             access_token = generate_token(str(user._id))
             refresh_token = generate_token(str(user._id), 2)
